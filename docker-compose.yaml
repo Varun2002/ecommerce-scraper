@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  mongodb:
+    image: "mongo"
+    volumes:
+      - data:/data/db
+  backend:
+    build: ./server
+    ports:
+      - "3500:3500"
+    volumes:
+      - logs:/server/logs
+      - ./backend:/server
+      - /server/node_modules
+
+    depends_on:
+      - mongodb
+  frontend:
+    build: ./frontend
+    ports:
+      - 9000:9000
+    volumes:
+      - ./frontend/src:/app/src
+    stdin_open: true
+    depends_on:
+      - backend
+volumes:
+  data:
+  logs:
